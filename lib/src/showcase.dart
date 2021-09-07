@@ -252,7 +252,7 @@ class _ShowcaseState extends State<Showcase> with TickerProviderStateMixin {
         visible: _showShowCase,
         maintainAnimation: true,
         maintainState: true,
-        child: Stack(
+        child: offset.dx.isNaN ? SizedBox.shrink() : Stack(
           children: [
             GestureDetector(
               onTap: _nextIfAny,

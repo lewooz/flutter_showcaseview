@@ -21,6 +21,7 @@
  */
 
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -56,6 +57,7 @@ class Showcase extends StatefulWidget {
   final bool? disposeOnTap;
   final bool disableAnimation;
   final EdgeInsets overlayPadding;
+  final bool hasBackgroundBlur;
 
   const Showcase(
       {required this.key,
@@ -70,6 +72,7 @@ class Showcase extends StatefulWidget {
       this.showcaseBackgroundColor = Colors.white,
       this.textColor = Colors.black,
       this.showArrow = true,
+      this.hasBackgroundBlur = false,
       this.onTargetClick,
       this.disposeOnTap,
       this.animationDuration = const Duration(milliseconds: 2000),
@@ -110,6 +113,7 @@ class Showcase extends StatefulWidget {
     this.showcaseBackgroundColor = Colors.white,
     this.textColor = Colors.black,
     this.onTargetClick,
+    this.hasBackgroundBlur = false,
     this.disposeOnTap,
     this.animationDuration = const Duration(milliseconds: 2000),
     this.disableAnimation = false,
@@ -256,15 +260,21 @@ class _ShowcaseState extends State<Showcase> with TickerProviderStateMixin {
           children: [
             GestureDetector(
               onTap: _nextIfAny,
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                child: CustomPaint(
-                  painter: ShapePainter(
-                      opacity: widget.overlayOpacity,
-                      rect: position!.getRect(),
-                      shapeBorder: widget.shapeBorder,
-                      color: widget.overlayColor),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(
+                  sigmaX: widget.hasBackgroundBlur ? 3 : 0,
+                  sigmaY: widget.hasBackgroundBlur ? 4 : 0,
+                ),
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                  child: CustomPaint(
+                    painter: ShapePainter(
+                        opacity: widget.overlayOpacity,
+                        rect: position!.getRect(),
+                        shapeBorder: widget.shapeBorder,
+                        color: widget.overlayColor),
+                  ),
                 ),
               ),
             ),
